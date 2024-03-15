@@ -11,7 +11,7 @@
 2. Navigate to the challenge directory of your choice for implementation:
 
    ````bash
-   cd ```bash [name of the challenge]```
+   cd  [name of the challenge]```
    ````
 
 3. Follow the instruction of that particular challenge to start the application:
