@@ -2,7 +2,7 @@ A JSON Parser implementation in Python from [John Cricket coding challenges](htt
 
 # WC Tool implementation in Python
 
-![python](https://badgen.net/badge/Built%20With/Python/blue/yellow)
+![python](https://badgen.net/badge/Built%20With/Python/yellow)
 
 A simple implementation of a JSON Parser written in Python.
 Part of my attempt at John Crickett's [Coding Chanllenges](https://codingchallenges.fyi/challenges/challenge-json-parser/)
