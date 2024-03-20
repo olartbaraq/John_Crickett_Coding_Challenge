@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/olartbaraq/load_balancer/utils"
+	"github.com/stretchr/testify/assert"
 )
 
 type TestData struct {
@@ -14,5 +15,6 @@ type TestData struct {
 func TestFileManager(t *testing.T) {
 	var loadedData TestData
 	err := utils.LoadFile("../test.json", &loadedData)
-
+	assert.NoError(t, err)
+	assert.FileExists(t, "../test.json")
 }
