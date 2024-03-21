@@ -10,7 +10,7 @@ import (
 const PATHTOCONFIGFILE = "./files/config.json"
 
 type ServerConf struct {
-	Address     string `json:"address" validate:"required"`
+	Address     string `json:"address" validate:"required,url"`
 	HealthCheck string `json:"healthcheck" validate:"required"`
 }
 
