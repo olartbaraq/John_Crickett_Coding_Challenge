@@ -14,7 +14,7 @@ type TestData struct {
 
 func TestFileManager(t *testing.T) {
 	var loadedData TestData
-	err := utils.LoadFile("../test.json", &loadedData)
+	err := utils.LoadFile("../files/test.json", &loadedData)
 	assert.NoError(t, err)
-	assert.FileExists(t, "../test.json")
+	assert.FileExists(t, "../files/test.json")
 }

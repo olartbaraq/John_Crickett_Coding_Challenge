@@ -1,0 +1,17 @@
+{
+  "env": "dev",
+  "port": 8000,
+  "no_of_servers": 3,
+  "randomServerDown": true,
+  "servers": [
+    {
+      "address": "https://www.google.com/",
+      "healthcheck": "/"
+    },
+
+    {
+      "address": "https://www.netflix.com/ng/",
+      "healthcheck": "/"
+    }
+  ]
+}

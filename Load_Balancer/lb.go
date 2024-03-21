@@ -1,27 +1,28 @@
 package main
 
-import (
-	"fmt"
-	"log"
-	"net/http"
-	"sync"
-)
-
-func getRoot(w http.ResponseWriter, r *http.Request) {
-	fmt.Printf("Received request from %v \n", r.Host)
-	fmt.Printf("%v \n", r.Method)
-	fmt.Printf("%v %v %v \n", r.Host, r.URL, r.Proto)
-	fmt.Printf("%v \n", r.Header["Accept"])
-	fmt.Printf("%v \n", r.Header["User-Agent"])
-	fmt.Printf("Response from server %v %v OK\n", r.Proto, http.StatusOK)
-	w.Write([]byte("Hello From Backend Server"))
+type LoadBalancer struct {
+	Port     int
+	LastPort int
+	Count    int
+	Servers  []*Server
+	Config   LoadBalancerConfig
 }
 
-func loadBalancer(wg *sync.WaitGroup) {
+// func getRoot(w http.ResponseWriter, r *http.Request) {
+// 	fmt.Printf("Received request from %v \n", r.Host)
+// 	fmt.Printf("%v \n", r.Method)
+// 	fmt.Printf("%v %v %v \n", r.Host, r.URL, r.Proto)
+// 	fmt.Printf("%v \n", r.Header["Accept"])
+// 	fmt.Printf("%v \n", r.Header["User-Agent"])
+// 	fmt.Printf("Response from server %v %v OK\n", r.Proto, http.StatusOK)
+// 	w.Write([]byte("Hello From Backend Server"))
+// }
 
-	http.HandleFunc("/", getRoot)
-	//http.HandleFunc("/hello", getHello)
+// func loadBalancer(wg *sync.WaitGroup) {
 
-	wg.Done()
-	log.Fatal(http.ListenAndServe(":80", nil))
-}
+// 	http.HandleFunc("/", getRoot)
+// 	//http.HandleFunc("/hello", getHello)
+
+// 	wg.Done()
+// 	log.Fatal(http.ListenAndServe(":80", nil))
+// }
