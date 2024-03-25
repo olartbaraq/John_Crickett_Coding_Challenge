@@ -9,5 +9,7 @@ var validate *validator.Validate
 func main() {
 
 	validate = validator.New(validator.WithRequiredStructEnabled())
+	lb := setupLoadBalancer()
+	lb.Start()
 
 }

@@ -1,5 +1,12 @@
 package main
 
+import (
+	"fmt"
+	"net/http"
+	"strconv"
+	"sync"
+)
+
 type LoadBalancer struct {
 	Port     int
 	LastPort int
@@ -8,21 +15,85 @@ type LoadBalancer struct {
 	Config   LoadBalancerConfig
 }
 
-// func getRoot(w http.ResponseWriter, r *http.Request) {
-// 	fmt.Printf("Received request from %v \n", r.Host)
-// 	fmt.Printf("%v \n", r.Method)
-// 	fmt.Printf("%v %v %v \n", r.Host, r.URL, r.Proto)
-// 	fmt.Printf("%v \n", r.Header["Accept"])
-// 	fmt.Printf("%v \n", r.Header["User-Agent"])
-// 	fmt.Printf("Response from server %v %v OK\n", r.Proto, http.StatusOK)
-// 	w.Write([]byte("Hello From Backend Server"))
-// }
+func (lb *LoadBalancer) getNextServer() *Server {
 
-// func loadBalancer(wg *sync.WaitGroup) {
+	lb.Count++
+	//fmt.Printf("initial count is %v", lb.Count)
+	server := lb.Servers[lb.Count%len(lb.Servers)]
 
-// 	http.HandleFunc("/", getRoot)
-// 	//http.HandleFunc("/hello", getHello)
+	if !server.IsAlive() {
+		lb.Count++
+		//fmt.Printf("recurssion count is %v", lb.Count)
+		lb.getNextServer()
+	}
 
-// 	wg.Done()
-// 	log.Fatal(http.ListenAndServe(":80", nil))
-// }
+	return server
+}
+
+func portInuse(port int) bool {
+	_, err := http.Get("http://localhost:" + strconv.Itoa(port))
+	return err == nil
+}
+
+func (lb *LoadBalancer) getNextPort() int {
+
+	lb.LastPort++
+	//fmt.Printf("initial port is %v", lb.LastPort)
+
+	for {
+		if portInuse(lb.LastPort) {
+			lb.LastPort++
+			//fmt.Printf("loop port is %v", lb.LastPort)
+		} else {
+			return lb.LastPort
+		}
+	}
+}
+
+func (lb *LoadBalancer) Serve(w http.ResponseWriter, r *http.Request) {
+	server := lb.getNextServer()
+
+	fmt.Printf("Sending request to server %v\n", server.Address)
+
+	server.Serve(w, r)
+
+}
+
+func (lb *LoadBalancer) StartDemoServers(wg *sync.WaitGroup) {
+	for _, server := range lb.Servers {
+		wg.Add(1)
+
+		go func(server *Server) {
+			defer wg.Done()
+			http.ListenAndServe(server.Address.Host, server.ServerMux)
+		}(server)
+	}
+
+}
+
+func (lb *LoadBalancer) StartLB(wg *sync.WaitGroup) {
+	wg.Add(1)
+
+	go func() {
+		defer wg.Done()
+
+		http.HandleFunc("/", lb.Serve)
+		http.ListenAndServe(":"+strconv.Itoa(lb.Port), nil)
+	}()
+
+}
+
+func (lb *LoadBalancer) Start() {
+	wg := sync.WaitGroup{}
+
+	defer wg.Wait()
+
+	if lb.Config.Env == "dev" {
+		lb.StartDemoServers(&wg)
+		lb.StartLB(&wg)
+
+	} else {
+		lb.StartLB(&wg)
+	}
+
+}

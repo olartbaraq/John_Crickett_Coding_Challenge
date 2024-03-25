@@ -1,16 +1,20 @@
 {
   "env": "dev",
   "port": 8000,
-  "no_of_servers": 3,
+  "no_of_servers": 4,
   "randomServerDown": true,
   "servers": [
     {
-      "address": "https://www.google.com/",
+      "address": "https://akanbimubaraq.netlify.net",
       "healthcheck": "/"
     },
 
     {
-      "address": "https://www.netflix.com/ng/",
+      "address": "https://portfolio-v2-opal-eta.vercel.app/",
+      "healthcheck": "/"
+    },
+    {
+      "address": "https://www.ibedc.com/",
       "healthcheck": "/"
     }
   ]

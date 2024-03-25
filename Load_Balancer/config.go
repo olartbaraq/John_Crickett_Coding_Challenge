@@ -15,7 +15,7 @@ type ServerConf struct {
 }
 
 type LoadBalancerConfig struct {
-	Port int    `json:"port" validate:"required,hostname_port"`
+	Port int    `json:"port" validate:"required"`
 	Env  string `json:"env" validate:"required,oneof=dev prod"`
 
 	// Development Specific Configs

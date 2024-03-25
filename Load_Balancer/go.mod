@@ -16,7 +16,6 @@ require (
 )
 
 require (
-	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/go-playground/validator/v10 v10.19.0
 	github.com/pmezard/go-difflib v1.0.0 // indirect

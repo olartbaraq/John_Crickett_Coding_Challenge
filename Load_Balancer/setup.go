@@ -1,5 +1,10 @@
 package main
 
+import (
+	"fmt"
+	"strconv"
+)
+
 var config LoadBalancerConfig
 
 func setupLoadBalancer() *LoadBalancer {
@@ -23,10 +28,27 @@ func setupLoadBalancer() *LoadBalancer {
 	return &lb
 }
 
-func ProdSetup(loadBalancer *LoadBalancer) {
-	panic("unimplemented")
+func devSetup(lb *LoadBalancer) {
+	fmt.Println("DEV SETUP")
+	baseUrl := "127.0.0.1:"
+
+	// create and start demo servers
+	for i := 0; i < lb.Config.NoOfServers; i++ {
+		nextPort := lb.getNextPort()
+		address := baseUrl + strconv.Itoa(nextPort)
+		server := NewDevServer(address)
+		//fmt.Println(lb.Servers)
+		lb.Servers = append(lb.Servers, server)
+
+	}
+
 }
 
-func devSetup(loadBalancer *LoadBalancer) {
-	panic("unimplemented")
+func ProdSetup(lb *LoadBalancer) {
+	fmt.Println("PROD SETUP")
+
+	for _, s := range lb.Config.Servers {
+		server := NewProdServer(s.HealthCheck, s.Address)
+		lb.Servers = append(lb.Servers, server)
+	}
 }
